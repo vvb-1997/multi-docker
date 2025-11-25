@@ -1,56 +1,33 @@
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - POSTGRES_PASSWORD=postgres_password
-  
-  redis:
-    image: 'redis:latest'
-  
-  api:
-    build:
-      context: ./server
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - ./server:/app
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - PGUSER=postgres
-      - PGHOST=postgres
-      - PGDATABASE=postgres
-      - PGPASSWORD=postgres_password
-      - PGPORT=5432
-  
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - ./client:/app
+    image: 'vvb07/multi-client'
+    mem_limit: 128m
+    hostname: client
+  
+  server:
+    image: 'vvb07/multi-server'
+    mem_limit: 128m
+    hostname: api
     environment:
-      - WDS_SOCKET_PORT=0
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - PGUSER=$PGUSER
+      - PGHOST=$PGHOST
+      - PGDATABASE=$PGDATABASE
+      - PGPASSWORD=$PGPASSWORD
+      - PGPORT=$PGPORT
 
   worker:
-    build:
-      context: ./worker
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - ./worker:/app
+    image: 'vvb07/multi-worker'
+    mem_limit: 128m
+    hostname: worker
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
 
   nginx:
-    restart: always
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.dev
+    image: 'vvb07/multi-nginx'
+    mem_limit: 128m
+    hostname: nginx
     ports:
-      - '3050:80'
-    depends_on:
-      - api
-      - client
+      - '80:80'
