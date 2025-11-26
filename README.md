@@ -25,7 +25,7 @@ A small repository with notes and helpers for running multi-container Docker set
 
 ## Documentation
 
-- create_beanstalk_env — docs/create_beanstalk_env.md  
+- [Create Beanstalk Env](docs/create_beanstalk_env.md) 
   A step-by-step guide for creating and configuring an AWS Elastic Beanstalk environment suitable for multi-container Docker applications. Includes environment configuration tips, how to prepare your Docker assets for EB, and common troubleshooting steps.
 
 - [AWS cheatsheet](docs/aws_cheat_sheet.md)
